@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.studyplanner.data.Datasource
-import com.example.studyplanner.ui.assignment.AssignmentList
+import com.example.studyplanner.ui.home.DashboardScreen
 import com.example.studyplanner.ui.theme.StudyPlannerTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,9 +19,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             StudyPlannerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    AssignmentList(
+                    DashboardScreen(
                         assignments = Datasource().loadAssignments(),
                         modules = Datasource().loadModules(),
+                        focusMinutes = 275,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
