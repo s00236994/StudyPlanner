@@ -14,20 +14,20 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.studyplanner.ui.theme.StudyPlannerTheme
 
 @Composable
-fun AssignmentEntryScreen(modifier: Modifier = Modifier) {
-    var title by remember { mutableStateOf("") }
-    var notes by remember { mutableStateOf("") }
-    var showTitleError by remember { mutableStateOf(false) }
+fun AssignmentEntryScreen(
+    modifier: Modifier = Modifier,
+    viewModel: AssignmentEntryViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
 
     Column(
         modifier = modifier
@@ -42,23 +42,23 @@ fun AssignmentEntryScreen(modifier: Modifier = Modifier) {
         )
 
         OutlinedTextField(
-            value = title,
-            onValueChange = { title = it },
+            value = viewModel.title,
+            onValueChange = { viewModel.updateTitle(it) },
             label = {
-                if (showTitleError) {
+                if (uiState.isTitleError) {
                     Text(text = "Title is required")
                 } else {
                     Text(text = "Title")
                 }
             },
-            isError = showTitleError,
+            isError = uiState.isTitleError,
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
-            value = notes,
-            onValueChange = { notes = it },
+            value = viewModel.notes,
+            onValueChange = { viewModel.updateNotes(it) },
             label = { Text(text = "Notes (optional)") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -71,7 +71,7 @@ fun AssignmentEntryScreen(modifier: Modifier = Modifier) {
                 Text(text = "Cancel")
             }
             Button(
-                onClick = { showTitleError = title.isBlank() },
+                onClick = { viewModel.saveAssignment() },
                 modifier = Modifier.weight(1f)
             ) {
                 Text(text = "Save")
