@@ -20,8 +20,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.studyplanner.R
 import com.example.studyplanner.ui.theme.StudyPlannerTheme
 
 @Composable
@@ -43,7 +45,7 @@ fun FocusScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Studying: $assignmentTitle",
+            text = stringResource(R.string.studying_title, assignmentTitle),
             style = MaterialTheme.typography.titleMedium
         )
 
@@ -70,7 +72,7 @@ fun FocusScreen(
 
         if (showLightWarning) {
             Text(
-                text = "Too dark to study. Turn on a light.",
+                text = stringResource(R.string.too_dark_warning),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.error
             )
@@ -78,13 +80,13 @@ fun FocusScreen(
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             StatCard(
-                label = "Distractions",
+                label = stringResource(R.string.distractions),
                 value = "$distractions",
                 modifier = Modifier.weight(1f)
             )
             StatCard(
-                label = "Light",
-                value = "$lightLevel lux",
+                label = stringResource(R.string.light),
+                value = stringResource(R.string.lux_value, lightLevel),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -94,13 +96,13 @@ fun FocusScreen(
                 onClick = { },
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Start")
+                Text(text = stringResource(R.string.start))
             }
             OutlinedButton(
                 onClick = { },
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Finish")
+                Text(text = stringResource(R.string.finish))
             }
         }
     }

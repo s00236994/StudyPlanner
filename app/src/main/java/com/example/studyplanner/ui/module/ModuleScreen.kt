@@ -13,8 +13,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.studyplanner.R
 import com.example.studyplanner.data.Datasource
 import com.example.studyplanner.data.Module
 import com.example.studyplanner.ui.theme.StudyPlannerTheme
@@ -55,10 +57,10 @@ fun ModuleCard(
                 )
             }
             TextButton(onClick = { }) {
-                Text(text = "Edit")
+                Text(text = stringResource(R.string.edit))
             }
             TextButton(onClick = { }) {
-                Text(text = "Delete")
+                Text(text = stringResource(R.string.delete))
             }
         }
     }

@@ -33,4 +33,13 @@
     <string name="notes_optional">Notes (optional)</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+
+    <!-- Focus session -->
+    <string name="studying_title">Studying: %s</string>
+    <string name="too_dark_warning">Too dark to study. Turn on a light.</string>
+    <string name="distractions">Distractions</string>
+    <string name="light">Light</string>
+    <string name="lux_value">%d lux</string>
+    <string name="start">Start</string>
+    <string name="finish">Finish</string>
 </resources>
