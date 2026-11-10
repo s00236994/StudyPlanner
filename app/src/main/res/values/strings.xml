@@ -25,4 +25,12 @@
     <string name="edit">Edit</string>
     <string name="done">Done</string>
     <string name="delete">Delete</string>
+
+    <!-- Assignment entry -->
+    <string name="add_assignment">Add assignment</string>
+    <string name="title">Title</string>
+    <string name="title_required">Title is required</string>
+    <string name="notes_optional">Notes (optional)</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 </resources>

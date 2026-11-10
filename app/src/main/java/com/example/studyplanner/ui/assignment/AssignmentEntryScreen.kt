@@ -17,9 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.studyplanner.R
 import com.example.studyplanner.ui.theme.StudyPlannerTheme
 
 @Composable
@@ -37,7 +39,7 @@ fun AssignmentEntryScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Add assignment",
+            text = stringResource(R.string.add_assignment),
             style = MaterialTheme.typography.headlineSmall
         )
 
@@ -46,9 +48,9 @@ fun AssignmentEntryScreen(
             onValueChange = { viewModel.updateTitle(it) },
             label = {
                 if (uiState.isTitleError) {
-                    Text(text = "Title is required")
+                    Text(text = stringResource(R.string.title_required))
                 } else {
-                    Text(text = "Title")
+                    Text(text = stringResource(R.string.title))
                 }
             },
             isError = uiState.isTitleError,
@@ -59,7 +61,7 @@ fun AssignmentEntryScreen(
         OutlinedTextField(
             value = viewModel.notes,
             onValueChange = { viewModel.updateNotes(it) },
-            label = { Text(text = "Notes (optional)") },
+            label = { Text(text = stringResource(R.string.notes_optional)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -68,13 +70,13 @@ fun AssignmentEntryScreen(
                 onClick = { },
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Cancel")
+                Text(text = stringResource(R.string.cancel))
             }
             Button(
                 onClick = { viewModel.saveAssignment() },
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Save")
+                Text(text = stringResource(R.string.save))
             }
         }
     }
