@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">StudyPlanner</string>
+
+    <string name="priority_status">%1$s priority (%2$s)</string>
+    <string name="no_assignments_yet">No assignments yet</string>
+    <string name="tap_plus_to_add">Tap + to add one</string>
 </resources>

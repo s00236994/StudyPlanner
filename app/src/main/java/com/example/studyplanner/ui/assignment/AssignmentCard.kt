@@ -8,8 +8,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.studyplanner.R
 import com.example.studyplanner.data.Assignment
 import com.example.studyplanner.ui.theme.StudyPlannerTheme
 
@@ -30,7 +32,11 @@ fun AssignmentCard(
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = "${assignment.priority} priority (${assignment.status})",
+                text = stringResource(
+                    R.string.priority_status,
+                    assignment.priority,
+                    assignment.status
+                ),
                 style = MaterialTheme.typography.bodySmall
             )
         }

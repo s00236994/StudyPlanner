@@ -11,8 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.studyplanner.R
 import com.example.studyplanner.data.Assignment
 import com.example.studyplanner.data.Datasource
 import com.example.studyplanner.data.Module
@@ -32,11 +34,11 @@ fun AssignmentList(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "No assignments yet",
+                text = stringResource(R.string.no_assignments_yet),
                 style = MaterialTheme.typography.titleLarge
             )
             Text(
-                text = "Tap + to add one",
+                text = stringResource(R.string.tap_plus_to_add),
                 style = MaterialTheme.typography.bodyMedium
             )
         }
