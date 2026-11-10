@@ -10,8 +10,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.studyplanner.R
 import com.example.studyplanner.data.Assignment
 import com.example.studyplanner.data.Datasource
 import com.example.studyplanner.data.Module
@@ -41,7 +43,7 @@ fun DashboardScreen(
             )
         }
         item {
-            SectionTitle(text = "Overdue (${overdue.size})")
+            SectionTitle(text = stringResource(R.string.overdue_count, overdue.size))
         }
         items(overdue) { assignment ->
             AssignmentCard(
@@ -51,7 +53,7 @@ fun DashboardScreen(
             )
         }
         item {
-            SectionTitle(text = "Due this week (${dueThisWeek.size})")
+            SectionTitle(text = stringResource(R.string.due_this_week_count, dueThisWeek.size))
         }
         items(dueThisWeek) { assignment ->
             AssignmentCard(
@@ -71,11 +73,15 @@ fun FocusSummaryCard(
     Card(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "Focus time this week",
+                text = stringResource(R.string.focus_time_this_week),
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = "${focusMinutes / 60}h ${focusMinutes % 60}m",
+                text = stringResource(
+                    R.string.focus_time_value,
+                    focusMinutes / 60,
+                    focusMinutes % 60
+                ),
                 style = MaterialTheme.typography.headlineMedium
             )
         }

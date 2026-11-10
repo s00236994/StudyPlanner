@@ -1,7 +1,14 @@
 <resources>
     <string name="app_name">StudyPlanner</string>
 
-    <string name="priority_status">%1$s priority (%2$s)</string>
+    <!-- Assignment card and list -->
+    <string name="priority_status">%s priority (%s)</string>
     <string name="no_assignments_yet">No assignments yet</string>
     <string name="tap_plus_to_add">Tap + to add one</string>
+
+    <!-- Dashboard -->
+    <string name="focus_time_this_week">Focus time this week</string>
+    <string name="focus_time_value">%dh %dm</string>
+    <string name="overdue_count">Overdue (%d)</string>
+    <string name="due_this_week_count">Due this week (%d)</string>
 </resources>
