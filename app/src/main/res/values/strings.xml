@@ -11,4 +11,18 @@
     <string name="focus_time_value">%dh %dm</string>
     <string name="overdue_count">Overdue (%d)</string>
     <string name="due_this_week_count">Due this week (%d)</string>
+
+    <!-- Assignment details -->
+    <string name="module_and_due">%s (%s)</string>
+    <string name="overdue_by_days">Overdue by %d days</string>
+    <string name="due_in_days">Due in %d days</string>
+    <string name="no_photo_yet">No photo yet</string>
+    <string name="notes">Notes</string>
+    <string name="no_notes">No notes</string>
+    <string name="focus_sessions">Focus sessions</string>
+    <string name="no_focus_sessions_yet">No focus sessions yet</string>
+    <string name="start_focus_session">Start focus session</string>
+    <string name="edit">Edit</string>
+    <string name="done">Done</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import com.example.studyplanner.data.Assignment
 import com.example.studyplanner.data.Datasource
 import com.example.studyplanner.ui.theme.StudyPlannerTheme
+import com.example.studyplanner.R
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun AssignmentDetailsScreen(
@@ -30,6 +32,12 @@ fun AssignmentDetailsScreen(
     moduleName: String,
     modifier: Modifier = Modifier
 ) {
+    val dueText = if (assignment.dueDate < System.currentTimeMillis()) {
+        stringResource(R.string.overdue_by_days, daysOverdue(assignment.dueDate))
+    } else {
+        stringResource(R.string.due_in_days, daysLeft(assignment.dueDate))
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -42,11 +50,15 @@ fun AssignmentDetailsScreen(
             style = MaterialTheme.typography.headlineSmall
         )
         Text(
-            text = "$moduleName (${dueText(assignment.dueDate)})",
+            text = stringResource(R.string.module_and_due, moduleName, dueText),
             style = MaterialTheme.typography.bodyMedium
         )
         Text(
-            text = "${assignment.priority} priority (${assignment.status})",
+            text = stringResource(
+                R.string.priority_status,
+                assignment.priority,
+                assignment.status
+            ),
             style = MaterialTheme.typography.bodyMedium
         )
 
@@ -59,25 +71,29 @@ fun AssignmentDetailsScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "No photo yet")
+                Text(text = stringResource(R.string.no_photo_yet))
             }
         }
 
         Text(
-            text = "Notes",
+            text = stringResource(R.string.notes),
             style = MaterialTheme.typography.titleMedium
         )
         Text(
-            text = if (assignment.notes.isEmpty()) "No notes" else assignment.notes,
+            text = if (assignment.notes.isEmpty()) {
+                stringResource(R.string.no_notes)
+            } else {
+                assignment.notes
+            },
             style = MaterialTheme.typography.bodyMedium
         )
 
         Text(
-            text = "Focus sessions",
+            text = stringResource(R.string.focus_sessions),
             style = MaterialTheme.typography.titleMedium
         )
         Text(
-            text = "No focus sessions yet",
+            text = stringResource(R.string.no_focus_sessions_yet),
             style = MaterialTheme.typography.bodyMedium
         )
 
@@ -85,41 +101,39 @@ fun AssignmentDetailsScreen(
             onClick = { },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Start focus session")
+            Text(text = stringResource(R.string.start_focus_session))
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             OutlinedButton(
                 onClick = { },
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Edit")
+                Text(text = stringResource(R.string.edit))
             }
             OutlinedButton(
                 onClick = { },
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Done")
+                Text(text = stringResource(R.string.done))
             }
             OutlinedButton(
                 onClick = { },
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Delete")
+                Text(text = stringResource(R.string.delete))
             }
         }
     }
 }
 
-fun dueText(dueDate: Long): String {
-    val now = System.currentTimeMillis()
+fun daysOverdue(dueDate: Long): Long {
     val oneDay = 86_400_000L
-    return if (dueDate < now) {
-        val days = (now - dueDate) / oneDay
-        "Overdue by $days days"
-    } else {
-        val days = (dueDate - now + oneDay - 1) / oneDay
-        "Due in $days days"
-    }
+    return (System.currentTimeMillis() - dueDate) / oneDay
+}
+
+fun daysLeft(dueDate: Long): Long {
+    val oneDay = 86_400_000L
+    return (dueDate - System.currentTimeMillis() + oneDay - 1) / oneDay
 }
 
 @Preview(showBackground = true)
