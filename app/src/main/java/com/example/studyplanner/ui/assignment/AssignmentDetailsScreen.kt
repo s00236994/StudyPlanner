@@ -18,19 +18,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.studyplanner.R
 import com.example.studyplanner.data.Assignment
 import com.example.studyplanner.data.Datasource
 import com.example.studyplanner.ui.theme.StudyPlannerTheme
-import com.example.studyplanner.R
-import androidx.compose.ui.res.stringResource
 
 @Composable
 fun AssignmentDetailsScreen(
     assignment: Assignment,
     moduleName: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onStartFocusButtonClicked: () -> Unit = {},
+    onEditButtonClicked: () -> Unit = {},
+    onDoneButtonClicked: () -> Unit = {},
+    onDeleteButtonClicked: () -> Unit = {}
 ) {
     val dueText = if (assignment.dueDate < System.currentTimeMillis()) {
         stringResource(R.string.overdue_by_days, daysOverdue(assignment.dueDate))
@@ -98,26 +102,26 @@ fun AssignmentDetailsScreen(
         )
 
         Button(
-            onClick = { },
+            onClick = onStartFocusButtonClicked,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = stringResource(R.string.start_focus_session))
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             OutlinedButton(
-                onClick = { },
+                onClick = onEditButtonClicked,
                 modifier = Modifier.weight(1f)
             ) {
                 Text(text = stringResource(R.string.edit))
             }
             OutlinedButton(
-                onClick = { },
+                onClick = onDoneButtonClicked,
                 modifier = Modifier.weight(1f)
             ) {
                 Text(text = stringResource(R.string.done))
             }
             OutlinedButton(
-                onClick = { },
+                onClick = onDeleteButtonClicked,
                 modifier = Modifier.weight(1f)
             ) {
                 Text(text = stringResource(R.string.delete))
