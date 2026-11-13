@@ -50,4 +50,5 @@
     <string name="assignment_details">Assignment details</string>
     <string name="modules">Modules</string>
     <string name="focus_session">Focus session</string>
+    <string name="back_button">Back</string>
 </resources>

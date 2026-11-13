@@ -3,7 +3,14 @@ package com.example.studyplanner
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,6 +29,9 @@ import com.example.studyplanner.ui.assignment.AssignmentList
 import com.example.studyplanner.ui.focus.FocusScreen
 import com.example.studyplanner.ui.home.DashboardScreen
 import com.example.studyplanner.ui.module.ModulesScreen
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 enum class StudyPlannerScreen(@StringRes val title: Int) {
     Dashboard(title = R.string.dashboard),
@@ -32,6 +42,32 @@ enum class StudyPlannerScreen(@StringRes val title: Int) {
     Focus(title = R.string.focus_session)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun StudyPlannerAppBar(
+    currentScreen: StudyPlannerScreen,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TopAppBar(
+        title = { Text(stringResource(currentScreen.title)) },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
+        modifier = modifier,
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back_button)
+                    )
+                }
+            }
+        }
+    )
+}
 @Composable
 fun StudyPlannerApp(
     viewModel: StudyPlannerViewModel = viewModel(),
@@ -39,7 +75,20 @@ fun StudyPlannerApp(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Scaffold { innerPadding ->
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = StudyPlannerScreen.valueOf(
+        backStackEntry?.destination?.route ?: StudyPlannerScreen.Dashboard.name
+    )
+
+    Scaffold(
+        topBar = {
+            StudyPlannerAppBar(
+                currentScreen = currentScreen,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+    ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = StudyPlannerScreen.Dashboard.name,
