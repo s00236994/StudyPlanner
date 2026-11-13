@@ -154,7 +154,12 @@ fun StudyPlannerApp(
         bottomBar = {
             StudyPlannerBottomNavigationBar(
                 currentScreen = currentScreen,
-                onTabPressed = { },
+                onTabPressed = { screen ->
+                    navController.popBackStack(StudyPlannerScreen.Dashboard.name, inclusive = false)
+                    if (screen != StudyPlannerScreen.Dashboard) {
+                        navController.navigate(screen.name)
+                    }
+                },
                 navigationItemContentList = navigationItemContentList
             )
         }
