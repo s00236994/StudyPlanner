@@ -42,4 +42,11 @@
     <string name="lux_value">%d lux</string>
     <string name="start">Start</string>
     <string name="finish">Finish</string>
+
+    <!-- Screen titles -->
+    <string name="dashboard">Dashboard</string>
+    <string name="assignments">Assignments</string>
+    <string name="assignment_details">Assignment details</string>
+    <string name="modules">Modules</string>
+    <string name="focus_session">Focus session</string>
 </resources>
