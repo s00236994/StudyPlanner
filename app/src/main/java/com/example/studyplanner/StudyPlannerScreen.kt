@@ -84,7 +84,11 @@ fun StudyPlannerApp(
                 )
             }
             composable(route = StudyPlannerScreen.AssignmentEntry.name) {
-                AssignmentEntryScreen(modifier = Modifier.fillMaxSize())
+                AssignmentEntryScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    onCancelButtonClicked = { navController.navigateUp() },
+                    onSaveButtonClicked = { navController.navigateUp() }
+                )
             }
             composable(route = StudyPlannerScreen.Modules.name) {
                 ModulesScreen(
@@ -100,7 +104,8 @@ fun StudyPlannerApp(
                     distractions = 0,
                     lightLevel = 320,
                     showLightWarning = false,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    onFinishButtonClicked = { navController.navigateUp() }
                 )
             }
         }
