@@ -27,7 +27,9 @@ import com.example.studyplanner.ui.theme.StudyPlannerTheme
 @Composable
 fun AssignmentEntryScreen(
     modifier: Modifier = Modifier,
-    viewModel: AssignmentEntryViewModel = viewModel()
+    viewModel: AssignmentEntryViewModel = viewModel(),
+    onCancelButtonClicked: () -> Unit = {},
+    onSaveButtonClicked: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -67,13 +69,17 @@ fun AssignmentEntryScreen(
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             OutlinedButton(
-                onClick = { },
+                onClick = onCancelButtonClicked,
                 modifier = Modifier.weight(1f)
             ) {
                 Text(text = stringResource(R.string.cancel))
             }
             Button(
-                onClick = { viewModel.saveAssignment() },
+                onClick = {
+                    if (viewModel.saveAssignment()) {
+                        onSaveButtonClicked()
+                    }
+                },
                 modifier = Modifier.weight(1f)
             ) {
                 Text(text = stringResource(R.string.save))
