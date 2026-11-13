@@ -19,9 +19,13 @@ import com.example.studyplanner.ui.theme.StudyPlannerTheme
 fun AssignmentCard(
     assignment: Assignment,
     moduleName: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
-    Card(modifier = modifier.fillMaxWidth()) {
+    Card(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth()
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = assignment.title,
