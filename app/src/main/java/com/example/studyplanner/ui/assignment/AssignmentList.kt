@@ -25,7 +25,8 @@ import com.example.studyplanner.ui.theme.StudyPlannerTheme
 fun AssignmentList(
     assignments: List<Assignment>,
     modules: List<Module>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAssignmentClick: (Assignment) -> Unit = {}
 ) {
     if (assignments.isEmpty()) {
         Column(
@@ -49,7 +50,8 @@ fun AssignmentList(
                 AssignmentCard(
                     assignment = assignment,
                     moduleName = moduleName,
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(8.dp),
+                    onClick = { onAssignmentClick(assignment)}
                 )
             }
         }

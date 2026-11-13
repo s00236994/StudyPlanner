@@ -25,7 +25,8 @@ fun DashboardScreen(
     assignments: List<Assignment>,
     modules: List<Module>,
     focusMinutes: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAssignmentClick: (Assignment) -> Unit = {}
 ) {
     val now = System.currentTimeMillis()
     val oneWeek = 7 * 86_400_000L
@@ -49,7 +50,8 @@ fun DashboardScreen(
             AssignmentCard(
                 assignment = assignment,
                 moduleName = modules.find { it.id == assignment.moduleId }?.name ?: "",
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
+                onClick = {onAssignmentClick(assignment) }
             )
         }
         item {
@@ -59,7 +61,9 @@ fun DashboardScreen(
             AssignmentCard(
                 assignment = assignment,
                 moduleName = modules.find { it.id == assignment.moduleId }?.name ?: "",
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
+                onClick = {onAssignmentClick(assignment) }
+
             )
         }
     }
