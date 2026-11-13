@@ -13,6 +13,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -82,6 +84,30 @@ fun StudyPlannerAppBar(
 }
 
 @Composable
+private fun StudyPlannerBottomNavigationBar(
+    currentScreen: StudyPlannerScreen,
+    onTabPressed: (StudyPlannerScreen) -> Unit,
+    navigationItemContentList: List<NavigationItemContent>,
+    modifier: Modifier = Modifier
+) {
+    NavigationBar(modifier = modifier) {
+        for (navItem in navigationItemContentList) {
+            NavigationBarItem(
+                selected = currentScreen == navItem.screen,
+                onClick = { onTabPressed(navItem.screen) },
+                icon = {
+                    Icon(
+                        imageVector = navItem.icon,
+                        contentDescription = navItem.text
+                    )
+                },
+                label = { Text(text = navItem.text) }
+            )
+        }
+    }
+}
+
+@Composable
 fun StudyPlannerApp(
     windowSize: WindowWidthSizeClass,
     viewModel: StudyPlannerViewModel = viewModel(),
@@ -123,6 +149,13 @@ fun StudyPlannerApp(
                 currentScreen = currentScreen,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() }
+            )
+        },
+        bottomBar = {
+            StudyPlannerBottomNavigationBar(
+                currentScreen = currentScreen,
+                onTabPressed = { },
+                navigationItemContentList = navigationItemContentList
             )
         }
     ) { innerPadding ->
