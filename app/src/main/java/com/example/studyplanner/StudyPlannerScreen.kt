@@ -3,6 +3,12 @@ package com.example.studyplanner
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -11,15 +17,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.studyplanner.data.Datasource
 import com.example.studyplanner.ui.StudyPlannerViewModel
@@ -29,9 +38,6 @@ import com.example.studyplanner.ui.assignment.AssignmentList
 import com.example.studyplanner.ui.focus.FocusScreen
 import com.example.studyplanner.ui.home.DashboardScreen
 import com.example.studyplanner.ui.module.ModulesScreen
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.navigation.compose.currentBackStackEntryAsState
 
 enum class StudyPlannerScreen(@StringRes val title: Int) {
     Dashboard(title = R.string.dashboard),
@@ -41,6 +47,12 @@ enum class StudyPlannerScreen(@StringRes val title: Int) {
     Modules(title = R.string.modules),
     Focus(title = R.string.focus_session)
 }
+
+private data class NavigationItemContent(
+    val screen: StudyPlannerScreen,
+    val icon: ImageVector,
+    val text: String
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,8 +80,10 @@ fun StudyPlannerAppBar(
         }
     )
 }
+
 @Composable
 fun StudyPlannerApp(
+    windowSize: WindowWidthSizeClass,
     viewModel: StudyPlannerViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
@@ -78,6 +92,29 @@ fun StudyPlannerApp(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = StudyPlannerScreen.valueOf(
         backStackEntry?.destination?.route ?: StudyPlannerScreen.Dashboard.name
+    )
+
+    val navigationItemContentList = listOf(
+        NavigationItemContent(
+            screen = StudyPlannerScreen.Dashboard,
+            icon = Icons.Filled.Home,
+            text = stringResource(R.string.dashboard)
+        ),
+        NavigationItemContent(
+            screen = StudyPlannerScreen.Assignments,
+            icon = Icons.Filled.DateRange,
+            text = stringResource(R.string.assignments)
+        ),
+        NavigationItemContent(
+            screen = StudyPlannerScreen.Modules,
+            icon = Icons.AutoMirrored.Filled.List,
+            text = stringResource(R.string.modules)
+        ),
+        NavigationItemContent(
+            screen = StudyPlannerScreen.Focus,
+            icon = Icons.Filled.PlayArrow,
+            text = stringResource(R.string.focus)
+        )
     )
 
     Scaffold(

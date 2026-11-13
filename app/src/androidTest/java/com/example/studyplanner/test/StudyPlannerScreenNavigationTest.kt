@@ -1,6 +1,7 @@
 package com.example.studyplanner.test
 
 import androidx.activity.ComponentActivity
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -28,8 +29,10 @@ class StudyPlannerScreenNavigationTest {
             navController = TestNavHostController(LocalContext.current).apply {
                 navigatorProvider.addNavigator(ComposeNavigator())
             }
-            StudyPlannerApp(navController = navController)
-        }
+            StudyPlannerApp(
+                windowSize = WindowWidthSizeClass.Compact,
+                navController = navController
+            )        }
     }
 
     @Test
