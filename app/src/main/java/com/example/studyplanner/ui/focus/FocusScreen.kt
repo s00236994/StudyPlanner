@@ -34,7 +34,8 @@ fun FocusScreen(
     distractions: Int,
     lightLevel: Int,
     showLightWarning: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onFinishButtonClicked: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -99,7 +100,7 @@ fun FocusScreen(
                 Text(text = stringResource(R.string.start))
             }
             OutlinedButton(
-                onClick = { },
+                onClick = onFinishButtonClicked,
                 modifier = Modifier.weight(1f)
             ) {
                 Text(text = stringResource(R.string.finish))
