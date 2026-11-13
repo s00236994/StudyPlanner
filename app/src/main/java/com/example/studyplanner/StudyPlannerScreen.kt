@@ -5,13 +5,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.studyplanner.data.Datasource
+import com.example.studyplanner.ui.StudyPlannerViewModel
 import com.example.studyplanner.ui.assignment.AssignmentDetailsScreen
 import com.example.studyplanner.ui.assignment.AssignmentEntryScreen
 import com.example.studyplanner.ui.assignment.AssignmentList
@@ -30,8 +34,11 @@ enum class StudyPlannerScreen(@StringRes val title: Int) {
 
 @Composable
 fun StudyPlannerApp(
+    viewModel: StudyPlannerViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
     Scaffold { innerPadding ->
         NavHost(
             navController = navController,
@@ -43,21 +50,37 @@ fun StudyPlannerApp(
                     assignments = Datasource().loadAssignments(),
                     modules = Datasource().loadModules(),
                     focusMinutes = 275,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    onAssignmentClick = {
+                        viewModel.selectAssignment(it)
+                        navController.navigate(StudyPlannerScreen.AssignmentDetails.name)
+                    }
                 )
             }
             composable(route = StudyPlannerScreen.Assignments.name) {
                 AssignmentList(
                     assignments = Datasource().loadAssignments(),
                     modules = Datasource().loadModules(),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    onAssignmentClick = {
+                        viewModel.selectAssignment(it)
+                        navController.navigate(StudyPlannerScreen.AssignmentDetails.name)
+                    }
                 )
             }
             composable(route = StudyPlannerScreen.AssignmentDetails.name) {
+                val assignment = uiState.selectedAssignment
                 AssignmentDetailsScreen(
-                    assignment = Datasource().loadAssignments()[5],
-                    moduleName = "Mobile App Development",
-                    modifier = Modifier.fillMaxSize()
+                    assignment = assignment,
+                    moduleName = Datasource().loadModules()
+                        .find { it.id == assignment.moduleId }?.name ?: "",
+                    modifier = Modifier.fillMaxSize(),
+                    onStartFocusButtonClicked = {
+                        navController.navigate(StudyPlannerScreen.Focus.name)
+                    },
+                    onEditButtonClicked = {
+                        navController.navigate(StudyPlannerScreen.AssignmentEntry.name)
+                    }
                 )
             }
             composable(route = StudyPlannerScreen.AssignmentEntry.name) {
@@ -71,7 +94,7 @@ fun StudyPlannerApp(
             }
             composable(route = StudyPlannerScreen.Focus.name) {
                 FocusScreen(
-                    assignmentTitle = "Mobile App Project",
+                    assignmentTitle = uiState.selectedAssignment.title,
                     timerText = "25:00",
                     statusText = stringResource(R.string.place_phone_face_down),
                     distractions = 0,
