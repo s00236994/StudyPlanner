@@ -40,6 +40,7 @@ import com.example.studyplanner.ui.assignment.AssignmentList
 import com.example.studyplanner.ui.focus.FocusScreen
 import com.example.studyplanner.ui.home.DashboardScreen
 import com.example.studyplanner.ui.module.ModulesScreen
+import com.example.studyplanner.ui.utils.StudyPlannerNavigationType
 
 enum class StudyPlannerScreen(@StringRes val title: Int) {
     Dashboard(title = R.string.dashboard),
@@ -114,6 +115,13 @@ fun StudyPlannerApp(
     navController: NavHostController = rememberNavController()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    val navigationType = when (windowSize) {
+        WindowWidthSizeClass.Compact -> StudyPlannerNavigationType.BOTTOM_NAVIGATION
+        WindowWidthSizeClass.Medium -> StudyPlannerNavigationType.NAVIGATION_RAIL
+        WindowWidthSizeClass.Expanded -> StudyPlannerNavigationType.NAVIGATION_RAIL
+        else -> StudyPlannerNavigationType.BOTTOM_NAVIGATION
+    }
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = StudyPlannerScreen.valueOf(
