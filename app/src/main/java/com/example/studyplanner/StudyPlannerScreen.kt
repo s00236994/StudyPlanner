@@ -1,6 +1,7 @@
 package com.example.studyplanner
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -109,6 +112,30 @@ private fun StudyPlannerBottomNavigationBar(
 }
 
 @Composable
+private fun StudyPlannerNavigationRail(
+    currentScreen: StudyPlannerScreen,
+    onTabPressed: (StudyPlannerScreen) -> Unit,
+    navigationItemContentList: List<NavigationItemContent>,
+    modifier: Modifier = Modifier
+) {
+    NavigationRail(modifier = modifier) {
+        for (navItem in navigationItemContentList) {
+            NavigationRailItem(
+                selected = currentScreen == navItem.screen,
+                onClick = { onTabPressed(navItem.screen) },
+                icon = {
+                    Icon(
+                        imageVector = navItem.icon,
+                        contentDescription = navItem.text
+                    )
+                },
+                label = { Text(text = navItem.text) }
+            )
+        }
+    }
+}
+
+@Composable
 fun StudyPlannerApp(
     windowSize: WindowWidthSizeClass,
     viewModel: StudyPlannerViewModel = viewModel(),
@@ -150,7 +177,12 @@ fun StudyPlannerApp(
             text = stringResource(R.string.focus)
         )
     )
-
+    val onTabPressed: (StudyPlannerScreen) -> Unit = { screen ->
+        navController.popBackStack(StudyPlannerScreen.Dashboard.name, inclusive = false)
+        if (screen != StudyPlannerScreen.Dashboard) {
+            navController.navigate(screen.name)
+        }
+    }
     Scaffold(
         topBar = {
             StudyPlannerAppBar(
@@ -160,85 +192,91 @@ fun StudyPlannerApp(
             )
         },
         bottomBar = {
-            StudyPlannerBottomNavigationBar(
-                currentScreen = currentScreen,
-                onTabPressed = { screen ->
-                    navController.popBackStack(StudyPlannerScreen.Dashboard.name, inclusive = false)
-                    if (screen != StudyPlannerScreen.Dashboard) {
-                        navController.navigate(screen.name)
-                    }
-                },
-                navigationItemContentList = navigationItemContentList
-            )
+            if (navigationType == StudyPlannerNavigationType.BOTTOM_NAVIGATION) {
+                StudyPlannerBottomNavigationBar(
+                    currentScreen = currentScreen,
+                    onTabPressed = onTabPressed,
+                    navigationItemContentList = navigationItemContentList
+                )
+            }
         }
     ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = StudyPlannerScreen.Dashboard.name,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable(route = StudyPlannerScreen.Dashboard.name) {
-                DashboardScreen(
-                    assignments = Datasource().loadAssignments(),
-                    modules = Datasource().loadModules(),
-                    focusMinutes = 275,
-                    modifier = Modifier.fillMaxSize(),
-                    onAssignmentClick = {
-                        viewModel.selectAssignment(it)
-                        navController.navigate(StudyPlannerScreen.AssignmentDetails.name)
-                    }
+        Row(modifier = Modifier.padding(innerPadding)) {
+            if (navigationType == StudyPlannerNavigationType.NAVIGATION_RAIL) {
+                StudyPlannerNavigationRail(
+                    currentScreen = currentScreen,
+                    onTabPressed = onTabPressed,
+                    navigationItemContentList = navigationItemContentList
                 )
             }
-            composable(route = StudyPlannerScreen.Assignments.name) {
-                AssignmentList(
-                    assignments = Datasource().loadAssignments(),
-                    modules = Datasource().loadModules(),
-                    modifier = Modifier.fillMaxSize(),
-                    onAssignmentClick = {
-                        viewModel.selectAssignment(it)
-                        navController.navigate(StudyPlannerScreen.AssignmentDetails.name)
-                    }
-                )
-            }
-            composable(route = StudyPlannerScreen.AssignmentDetails.name) {
-                val assignment = uiState.selectedAssignment
-                AssignmentDetailsScreen(
-                    assignment = assignment,
-                    moduleName = Datasource().loadModules()
-                        .find { it.id == assignment.moduleId }?.name ?: "",
-                    modifier = Modifier.fillMaxSize(),
-                    onStartFocusButtonClicked = {
-                        navController.navigate(StudyPlannerScreen.Focus.name)
-                    },
-                    onEditButtonClicked = {
-                        navController.navigate(StudyPlannerScreen.AssignmentEntry.name)
-                    }
-                )
-            }
-            composable(route = StudyPlannerScreen.AssignmentEntry.name) {
-                AssignmentEntryScreen(
-                    modifier = Modifier.fillMaxSize(),
-                    onCancelButtonClicked = { navController.navigateUp() },
-                    onSaveButtonClicked = { navController.navigateUp() }
-                )
-            }
-            composable(route = StudyPlannerScreen.Modules.name) {
-                ModulesScreen(
-                    modules = Datasource().loadModules(),
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            composable(route = StudyPlannerScreen.Focus.name) {
-                FocusScreen(
-                    assignmentTitle = uiState.selectedAssignment.title,
-                    timerText = "25:00",
-                    statusText = stringResource(R.string.place_phone_face_down),
-                    distractions = 0,
-                    lightLevel = 320,
-                    showLightWarning = false,
-                    modifier = Modifier.fillMaxSize(),
-                    onFinishButtonClicked = { navController.navigateUp() }
-                )
+            NavHost(
+                navController = navController,
+                startDestination = StudyPlannerScreen.Dashboard.name,
+                modifier = Modifier.weight(1f)
+            ) {
+                composable(route = StudyPlannerScreen.Dashboard.name) {
+                    DashboardScreen(
+                        assignments = Datasource().loadAssignments(),
+                        modules = Datasource().loadModules(),
+                        focusMinutes = 275,
+                        modifier = Modifier.fillMaxSize(),
+                        onAssignmentClick = {
+                            viewModel.selectAssignment(it)
+                            navController.navigate(StudyPlannerScreen.AssignmentDetails.name)
+                        }
+                    )
+                }
+                composable(route = StudyPlannerScreen.Assignments.name) {
+                    AssignmentList(
+                        assignments = Datasource().loadAssignments(),
+                        modules = Datasource().loadModules(),
+                        modifier = Modifier.fillMaxSize(),
+                        onAssignmentClick = {
+                            viewModel.selectAssignment(it)
+                            navController.navigate(StudyPlannerScreen.AssignmentDetails.name)
+                        }
+                    )
+                }
+                composable(route = StudyPlannerScreen.AssignmentDetails.name) {
+                    val assignment = uiState.selectedAssignment
+                    AssignmentDetailsScreen(
+                        assignment = assignment,
+                        moduleName = Datasource().loadModules()
+                            .find { it.id == assignment.moduleId }?.name ?: "",
+                        modifier = Modifier.fillMaxSize(),
+                        onStartFocusButtonClicked = {
+                            navController.navigate(StudyPlannerScreen.Focus.name)
+                        },
+                        onEditButtonClicked = {
+                            navController.navigate(StudyPlannerScreen.AssignmentEntry.name)
+                        }
+                    )
+                }
+                composable(route = StudyPlannerScreen.AssignmentEntry.name) {
+                    AssignmentEntryScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        onCancelButtonClicked = { navController.navigateUp() },
+                        onSaveButtonClicked = { navController.navigateUp() }
+                    )
+                }
+                composable(route = StudyPlannerScreen.Modules.name) {
+                    ModulesScreen(
+                        modules = Datasource().loadModules(),
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                composable(route = StudyPlannerScreen.Focus.name) {
+                    FocusScreen(
+                        assignmentTitle = uiState.selectedAssignment.title,
+                        timerText = "25:00",
+                        statusText = stringResource(R.string.place_phone_face_down),
+                        distractions = 0,
+                        lightLevel = 320,
+                        showLightWarning = false,
+                        modifier = Modifier.fillMaxSize(),
+                        onFinishButtonClicked = { navController.navigateUp() }
+                    )
+                }
             }
         }
     }
