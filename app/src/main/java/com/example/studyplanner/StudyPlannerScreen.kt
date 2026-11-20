@@ -28,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -196,7 +197,8 @@ fun StudyPlannerApp(
                 StudyPlannerBottomNavigationBar(
                     currentScreen = currentScreen,
                     onTabPressed = onTabPressed,
-                    navigationItemContentList = navigationItemContentList
+                    navigationItemContentList = navigationItemContentList,
+                    modifier = Modifier.testTag(stringResource(R.string.navigation_bottom))
                 )
             }
         }
@@ -206,7 +208,8 @@ fun StudyPlannerApp(
                 StudyPlannerNavigationRail(
                     currentScreen = currentScreen,
                     onTabPressed = onTabPressed,
-                    navigationItemContentList = navigationItemContentList
+                    navigationItemContentList = navigationItemContentList,
+                    modifier = Modifier.testTag(stringResource(R.string.navigation_rail))
                 )
             }
             NavHost(

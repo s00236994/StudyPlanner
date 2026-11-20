@@ -52,4 +52,7 @@
     <string name="focus_session">Focus session</string>
     <string name="back_button">Back</string>
     <string name="focus">Focus</string>
+
+    <string name="navigation_bottom">Navigation Bottom</string>
+    <string name="navigation_rail">Navigation Rail</string>
 </resources>
