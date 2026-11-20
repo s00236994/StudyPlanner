@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -35,13 +34,65 @@ fun FocusScreen(
     lightLevel: Int,
     showLightWarning: Boolean,
     modifier: Modifier = Modifier,
+    isLandscape: Boolean = false,
     onFinishButtonClicked: () -> Unit = {}
 ) {
+    if (isLandscape) {
+        Row(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(24.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            FocusTimer(
+                assignmentTitle = assignmentTitle,
+                timerText = timerText,
+                modifier = Modifier.weight(1f)
+            )
+            FocusDetails(
+                statusText = statusText,
+                distractions = distractions,
+                lightLevel = lightLevel,
+                showLightWarning = showLightWarning,
+                onFinishButtonClicked = onFinishButtonClicked,
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+            )
+        }
+    } else {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            FocusTimer(
+                assignmentTitle = assignmentTitle,
+                timerText = timerText
+            )
+            FocusDetails(
+                statusText = statusText,
+                distractions = distractions,
+                lightLevel = lightLevel,
+                showLightWarning = showLightWarning,
+                onFinishButtonClicked = onFinishButtonClicked
+            )
+        }
+    }
+}
+
+@Composable
+fun FocusTimer(
+    assignmentTitle: String,
+    timerText: String,
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -49,7 +100,6 @@ fun FocusScreen(
             text = stringResource(R.string.studying_title, assignmentTitle),
             style = MaterialTheme.typography.titleMedium
         )
-
         Box(
             modifier = Modifier
                 .size(220.dp)
@@ -65,7 +115,23 @@ fun FocusScreen(
                 style = MaterialTheme.typography.displayMedium
             )
         }
+    }
+}
 
+@Composable
+fun FocusDetails(
+    statusText: String,
+    distractions: Int,
+    lightLevel: Int,
+    showLightWarning: Boolean,
+    onFinishButtonClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             text = statusText,
             style = MaterialTheme.typography.bodyLarge
@@ -155,6 +221,22 @@ fun FocusScreenDarkRoomPreview() {
             distractions = 2,
             lightLevel = 38,
             showLightWarning = true
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 800, heightDp = 360)
+@Composable
+fun FocusScreenLandscapePreview() {
+    StudyPlannerTheme {
+        FocusScreen(
+            assignmentTitle = "Mobile App Project",
+            timerText = "12:40",
+            statusText = "Paused. Phone picked up",
+            distractions = 2,
+            lightLevel = 38,
+            showLightWarning = true,
+            isLandscape = true
         )
     }
 }

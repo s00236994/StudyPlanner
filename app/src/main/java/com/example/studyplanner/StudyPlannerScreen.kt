@@ -274,6 +274,7 @@ fun StudyPlannerApp(
                         lightLevel = 320,
                         showLightWarning = false,
                         modifier = Modifier.fillMaxSize(),
+                        isLandscape = navigationType == StudyPlannerNavigationType.NAVIGATION_RAIL,
                         onFinishButtonClicked = { navController.navigateUp() }
                     )
                 }
