@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -42,9 +43,12 @@ import com.example.studyplanner.ui.assignment.AssignmentDetailsScreen
 import com.example.studyplanner.ui.assignment.AssignmentEntryScreen
 import com.example.studyplanner.ui.assignment.AssignmentList
 import com.example.studyplanner.ui.focus.FocusScreen
+import com.example.studyplanner.ui.focus.FocusViewModel
+import com.example.studyplanner.ui.focus.formatTime
 import com.example.studyplanner.ui.home.DashboardScreen
 import com.example.studyplanner.ui.module.ModulesScreen
 import com.example.studyplanner.ui.utils.StudyPlannerNavigationType
+import kotlinx.coroutines.delay
 
 enum class StudyPlannerScreen(@StringRes val title: Int) {
     Dashboard(title = R.string.dashboard),
@@ -270,16 +274,36 @@ fun StudyPlannerApp(
                     )
                 }
                 composable(route = StudyPlannerScreen.Focus.name) {
+                    val focusViewModel: FocusViewModel = viewModel()
+                    val focusUiState by focusViewModel.uiState.collectAsState()
+
+                    LaunchedEffect(focusUiState.isRunning) {
+                        while (focusUiState.isRunning) {
+                            delay(1000)
+                            focusViewModel.tick()
+                        }
+                    }
+
                     FocusScreen(
                         assignmentTitle = uiState.selectedAssignment.title,
-                        timerText = "25:00",
-                        statusText = stringResource(R.string.place_phone_face_down),
-                        distractions = 0,
+                        timerText = formatTime(focusUiState.secondsLeft),
+                        statusText = if (focusUiState.isRunning) {
+                            stringResource(R.string.timer_running)
+                        } else {
+                            stringResource(R.string.place_phone_face_down)
+                        },
+                        distractions = focusUiState.distractions,
                         lightLevel = 320,
                         showLightWarning = false,
                         modifier = Modifier.fillMaxSize(),
                         isLandscape = navigationType == StudyPlannerNavigationType.NAVIGATION_RAIL,
-                        onFinishButtonClicked = { navController.navigateUp() }
+                        isRunning = focusUiState.isRunning,
+                        onStartButtonClicked = { focusViewModel.startTimer() },
+                        onPauseButtonClicked = { focusViewModel.pauseTimer() },
+                        onFinishButtonClicked = {
+                            focusViewModel.pauseTimer()
+                            navController.navigateUp()
+                        }
                     )
                 }
             }

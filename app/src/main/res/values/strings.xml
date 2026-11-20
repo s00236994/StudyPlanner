@@ -43,6 +43,8 @@
     <string name="start">Start</string>
     <string name="finish">Finish</string>
     <string name="place_phone_face_down">Place phone face down to start</string>
+    <string name="pause">Pause</string>
+    <string name="timer_running">Focusing. Keep going!</string>
 
     <!-- Screen titles -->
     <string name="dashboard">Dashboard</string>

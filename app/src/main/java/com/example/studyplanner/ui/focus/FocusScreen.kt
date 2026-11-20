@@ -35,6 +35,9 @@ fun FocusScreen(
     showLightWarning: Boolean,
     modifier: Modifier = Modifier,
     isLandscape: Boolean = false,
+    isRunning: Boolean = false,
+    onStartButtonClicked: () -> Unit = {},
+    onPauseButtonClicked: () -> Unit = {},
     onFinishButtonClicked: () -> Unit = {}
 ) {
     if (isLandscape) {
@@ -54,6 +57,9 @@ fun FocusScreen(
                 statusText = statusText,
                 distractions = distractions,
                 lightLevel = lightLevel,
+                isRunning = isRunning,
+                onStartButtonClicked = onStartButtonClicked,
+                onPauseButtonClicked = onPauseButtonClicked,
                 showLightWarning = showLightWarning,
                 onFinishButtonClicked = onFinishButtonClicked,
                 modifier = Modifier
@@ -78,6 +84,9 @@ fun FocusScreen(
                 statusText = statusText,
                 distractions = distractions,
                 lightLevel = lightLevel,
+                isRunning = isRunning,
+                onStartButtonClicked = onStartButtonClicked,
+                onPauseButtonClicked = onPauseButtonClicked,
                 showLightWarning = showLightWarning,
                 onFinishButtonClicked = onFinishButtonClicked
             )
@@ -125,6 +134,9 @@ fun FocusDetails(
     lightLevel: Int,
     showLightWarning: Boolean,
     onFinishButtonClicked: () -> Unit,
+    isRunning: Boolean,
+    onStartButtonClicked: () -> Unit,
+    onPauseButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -160,10 +172,16 @@ fun FocusDetails(
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(
-                onClick = { },
+                onClick = if (isRunning) onPauseButtonClicked else onStartButtonClicked,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = stringResource(R.string.start))
+                Text(
+                    text = if (isRunning) {
+                        stringResource(R.string.pause)
+                    } else {
+                        stringResource(R.string.start)
+                    }
+                )
             }
             OutlinedButton(
                 onClick = onFinishButtonClicked,
@@ -224,6 +242,14 @@ fun FocusScreenDarkRoomPreview() {
         )
     }
 }
+
+fun formatTime(totalSeconds: Int): String {
+    val minutes = totalSeconds / 60
+    val seconds = totalSeconds % 60
+    val secondsText = if (seconds < 10) "0$seconds" else "$seconds"
+    return "$minutes:$secondsText"
+}
+
 
 @Preview(showBackground = true, widthDp = 800, heightDp = 360)
 @Composable
