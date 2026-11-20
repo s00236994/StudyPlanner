@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,10 +32,82 @@ fun AssignmentDetailsScreen(
     assignment: Assignment,
     moduleName: String,
     modifier: Modifier = Modifier,
+    isLandscape: Boolean = false,
     onStartFocusButtonClicked: () -> Unit = {},
     onEditButtonClicked: () -> Unit = {},
     onDoneButtonClicked: () -> Unit = {},
     onDeleteButtonClicked: () -> Unit = {}
+) {
+    if (isLandscape) {
+        Row(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            DetailsPhoto(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            )
+            DetailsInfo(
+                assignment = assignment,
+                moduleName = moduleName,
+                onStartFocusButtonClicked = onStartFocusButtonClicked,
+                onEditButtonClicked = onEditButtonClicked,
+                onDoneButtonClicked = onDoneButtonClicked,
+                onDeleteButtonClicked = onDeleteButtonClicked,
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+            )
+        }
+    } else {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            DetailsPhoto(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
+            )
+            DetailsInfo(
+                assignment = assignment,
+                moduleName = moduleName,
+                onStartFocusButtonClicked = onStartFocusButtonClicked,
+                onEditButtonClicked = onEditButtonClicked,
+                onDoneButtonClicked = onDoneButtonClicked,
+                onDeleteButtonClicked = onDeleteButtonClicked
+            )
+        }
+    }
+}
+
+@Composable
+fun DetailsPhoto(modifier: Modifier = Modifier) {
+    Card(modifier = modifier) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = stringResource(R.string.no_photo_yet))
+        }
+    }
+}
+
+@Composable
+fun DetailsInfo(
+    assignment: Assignment,
+    moduleName: String,
+    onStartFocusButtonClicked: () -> Unit,
+    onEditButtonClicked: () -> Unit,
+    onDoneButtonClicked: () -> Unit,
+    onDeleteButtonClicked: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val dueText = if (assignment.dueDate < System.currentTimeMillis()) {
         stringResource(R.string.overdue_by_days, daysOverdue(assignment.dueDate))
@@ -43,10 +116,7 @@ fun AssignmentDetailsScreen(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
@@ -65,19 +135,6 @@ fun AssignmentDetailsScreen(
             ),
             style = MaterialTheme.typography.bodyMedium
         )
-
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp)
-        ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = stringResource(R.string.no_photo_yet))
-            }
-        }
 
         Text(
             text = stringResource(R.string.notes),
@@ -147,6 +204,18 @@ fun AssignmentDetailsScreenPreview() {
         AssignmentDetailsScreen(
             assignment = Datasource().loadAssignments()[5],
             moduleName = "Mobile App Development"
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 800, heightDp = 360)
+@Composable
+fun AssignmentDetailsScreenLandscapePreview() {
+    StudyPlannerTheme {
+        AssignmentDetailsScreen(
+            assignment = Datasource().loadAssignments()[5],
+            moduleName = "Mobile App Development",
+            isLandscape = true
         )
     }
 }

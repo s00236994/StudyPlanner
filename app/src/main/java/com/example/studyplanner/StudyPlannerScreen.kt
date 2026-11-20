@@ -244,6 +244,7 @@ fun StudyPlannerApp(
                         moduleName = Datasource().loadModules()
                             .find { it.id == assignment.moduleId }?.name ?: "",
                         modifier = Modifier.fillMaxSize(),
+                        isLandscape = navigationType == StudyPlannerNavigationType.NAVIGATION_RAIL,
                         onStartFocusButtonClicked = {
                             navController.navigate(StudyPlannerScreen.Focus.name)
                         },
